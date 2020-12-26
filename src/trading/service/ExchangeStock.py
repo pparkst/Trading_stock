@@ -2,8 +2,9 @@ import win32com.client
 import unittest
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))))
 from src_test import test_Trading_unittest as ptest
+from src_test import slackTest as slackTest
 
 class ExchangeStock:
     def getExchangeStockList(self):
@@ -32,5 +33,8 @@ class ExchangeStock:
 test = ptest.Test()
 test.test_connection()
 
-stock = ExchangeStock()
-stock.getExchangeStockList()
+slackTest = slackTest.slackTest()
+slackTest.test_connectionSlack()
+
+# stock = ExchangeStock()
+# stock.getExchangeStockList()
