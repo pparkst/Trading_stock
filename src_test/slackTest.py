@@ -2,8 +2,9 @@ import unittest
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-from src.util import Color
+from src.util import common
 from slacker import Slacker
+from src.trading import trading_object
 
 
 def ppark():
@@ -12,8 +13,8 @@ def ppark():
 class slackTest(unittest.TestCase):
 
     def test_connectionSlack(self):
-        slack = Slacker('xoxb-1605937844820-1605942367508-YQ9WVDH7pwCpFy2NiekoqdIi')
-        slack.chat.post_message('#test', 'Hello fellow slackers!')
+        slack = trading_object.slack
+        slack.chat.post_message('#test', 'Hello')
         print(slack.users)
         response = slack.users.list()
         users = response.body['members']
