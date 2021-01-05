@@ -15,5 +15,3 @@ def AutoConnectionCreon():
     app = application.Application()
     app.start('C:\CREON\STARTER\coStarter.exe%s/autostart' % pD.accountInfo)
     time.sleep(60)
-
-AutoConnectionCreon()

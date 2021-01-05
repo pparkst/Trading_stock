@@ -8,6 +8,7 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(
 import trading.trading_object as crObj
 from util.common import printlog
 from slack.postMessage import postMessage
+import trading.service.AutoConnection as Ac
 
 # from bs4 import BeautifulSoup
 # from urllib.request import urlopen
@@ -240,13 +241,12 @@ def sell_all():
     except Exception as ex:
         postMessage("sell_all() -> exception! " + str(ex))
 
-if __name__ == '__main__': 
+def run():
     try:
         symbol_list = ['종목 뭐 넣을까 으음']
         bought_list = []     # 매수 완료된 종목 리스트
-        target_buy_count = 5 # 매수할 종목 수
-        buy_percent = 0.25   
-        printlog('check_creon_system() :', check_creon_system())  # 크레온 접속 점검
+        target_buy_count = 4 # 매수할 종목 수
+        buy_percent = 0.25
         stocks = get_stock_balance('ALL')      # 보유한 모든 종목 조회
         total_cash = int(get_current_cash())   # 100% 증거금 주문 가능 금액 조회
         buy_amount = total_cash * buy_percent  # 종목별 주문 금액 계산

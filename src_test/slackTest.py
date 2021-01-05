@@ -4,21 +4,15 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from src.util import common
 from slacker import Slacker
-from src.trading import trading_object
-
-
-def ppark():
-    print("TEST")
+from src.trading import PersonalData
 
 class slackTest(unittest.TestCase):
 
     def test_connectionSlack(self):
-        slack = trading_object.slack
-        slack.chat.post_message('#test', 'Hello')
-        print(slack.users)
+        slack = PersonalData.slack
+        slack.chat.post_message('#to-break-even', 'Trading App Run !')
         response = slack.users.list()
         users = response.body['members']
-        print(users)
         self.assertTrue(len(users) > 0)
 
 if __name__ == '__main__':  
