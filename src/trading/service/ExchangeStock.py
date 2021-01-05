@@ -30,11 +30,12 @@ class ExchangeStock:
  
         print("거래소 + 코스닥 종목코드 ",len(codeList) + len(codeList2))
 
-test = ptest.Test()
-test.test_connection()
 
-slackTest = slackTest.slackTest()
-slackTest.test_connectionSlack()
+# test = ptest.Test()
+# test.test_connection()
+
+# slackTest = slackTest.slackTest()
+# slackTest.test_connectionSlack()
 
 # stock = ExchangeStock()
 # stock.getExchangeStockList()
