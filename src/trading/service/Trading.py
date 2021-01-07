@@ -5,44 +5,13 @@ from datetime import datetime
 import time, calendar
 #sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
-import trading.trading_object as crObj
+import trading.trading_object as tradingObj
 from util.common import printlog
 from slack.postMessage import postMessage
 import trading.service.AutoConnection as Ac
 
-# from bs4 import BeautifulSoup
-# from urllib.request import urlopen
-# from selenium import webdriver
-# from selenium.webdriver.chrome.options import Options 
- 
-# # 크레온 플러스 공통 OBJECT
-# cpCodeMgr = win32com.client.Dispatch('CpUtil.CpStockCode')
-# cpStatus = win32com.client.Dispatch('CpUtil.CpCybos')
-# cpTradeUtil = win32com.client.Dispatch('CpTrade.CpTdUtil')
-# cpStock = win32com.client.Dispatch('DsCbo1.StockMst')
-# cpOhlc = win32com.client.Dispatch('CpSysDib.StockChart')
-# cpBalance = win32com.client.Dispatch('CpTrade.CpTd6033')
-# cpCash = win32com.client.Dispatch('CpTrade.CpTdNew5331A')
-# cpOrder = win32com.client.Dispatch('CpTrade.CpTd0311')  
+crObj = tradingObj.CreonObject()
 
-def check_creon_system():
-    """크레온 플러스 시스템 연결 상태를 점검한다."""
-    # 관리자 권한으로 프로세스 실행 여부
-    if not ctypes.windll.shell32.IsUserAnAdmin():
-        printlog('check_creon_system() : admin user -> FAILED')
-        return False
- 
-    # 연결 여부 체크
-    if (crObj.cpStatus.IsConnect == 0):
-        printlog('check_creon_system() : connect to server -> FAILED')
-        return False
- 
-    # 주문 관련 초기화 - 계좌 관련 코드가 있을 때만 사용
-    if (crObj.cpTradeUtil.TradeInit(0) != 0):
-        printlog('check_creon_system() : init trade -> FAILED')
-        return False
-
-    return True
 
 def get_current_price(code):
     """인자로 받은 종목의 현재가, 매수호가, 매도호가를 반환한다."""
@@ -82,7 +51,7 @@ def get_stock_balance(code):
     crObj.cpBalance.SetInputValue(0, acc)         # 계좌번호
     crObj.cpBalance.SetInputValue(1, accFlag[0])  # 상품구분 - 주식 상품 중 첫번째
     crObj.cpBalance.SetInputValue(2, 50)          # 요청 건수(최대 50)
-    crObj.cpBalance.BlockRequest()     
+    crObj.cpBalance.BlockRequest()
     if code == 'ALL':
         postMessage('계좌명: ' + str(crObj.cpBalance.GetHeaderValue(0)))
         postMessage('결제잔고수량 : ' + str(crObj.cpBalance.GetHeaderValue(1)))
@@ -243,10 +212,10 @@ def sell_all():
 
 def run():
     try:
-        symbol_list = ['종목 뭐 넣을까 으음']
+        symbol_list = ['A000270']
         bought_list = []     # 매수 완료된 종목 리스트
-        target_buy_count = 4 # 매수할 종목 수
-        buy_percent = 0.25
+        target_buy_count = 1 # 매수할 종목 수
+        buy_percent = 1
         stocks = get_stock_balance('ALL')      # 보유한 모든 종목 조회
         total_cash = int(get_current_cash())   # 100% 증거금 주문 가능 금액 조회
         buy_amount = total_cash * buy_percent  # 종목별 주문 금액 계산
@@ -265,7 +234,7 @@ def run():
             today = datetime.today().weekday()
             if today == 5 or today == 6:  # 토요일이나 일요일이면 자동 종료
                 printlog('Today is', 'Saturday.' if today == 5 else 'Sunday.')
-                sys.exit(0)
+                break
             if t_9 < t_now < t_start and soldout == False:
                 soldout = True
                 sell_all()
@@ -279,11 +248,12 @@ def run():
                     time.sleep(5)
             if t_sell < t_now < t_exit:  # PM 03:15 ~ PM 03:20 : 일괄 매도
                 if sell_all() == True:
-                    postMessage('`sell_all() returned True -> self-destructed!`')
-                    sys.exit(0)
+                    postMessage('`sell_all() returned True -> self-sleep!`')
+                    break
             if t_exit < t_now:  # PM 03:20 ~ :프로그램 종료
-                postMessage('`self-destructed!`')
-                sys.exit(0)
+                postMessage('`self-sleep!`')
+                break
             time.sleep(3)
+
     except Exception as ex:
         postMessage('`main -> exception! ' + str(ex) + '`')
