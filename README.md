@@ -9,5 +9,5 @@
      + pywin32   
      + pywinauto
      + unittest
-     + slacker
+     + slacker 
   
