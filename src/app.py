@@ -37,7 +37,7 @@ def run():
     t_sell = t_now.replace(hour=15, minute=20, second=0, microsecond=0)
     today = datetime.today().weekday()
 
-    timerlimit = 6500
+    timerlimit = 60
     if today in (5,6):
         timerlimit = 28800
 

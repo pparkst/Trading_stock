@@ -11,7 +11,8 @@ from slack.postMessage import postMessage
 import trading.service.AutoConnection as Ac
 
 crObj = tradingObj.CreonObject()
-
+bought_list = []
+buy_amount = 0
 
 def get_current_price(code):
     """인자로 받은 종목의 현재가, 매수호가, 매도호가를 반환한다."""
@@ -127,6 +128,7 @@ def buy_etf(code):
     """인자로 받은 종목을 최유리 지정가 FOK 조건으로 매수한다."""
     try:
         global bought_list      # 함수 내에서 값 변경을 하기 위해 global로 지정
+        global buy_amount
         if code in bought_list: # 매수 완료 종목이면 더 이상 안 사도록 함수 종료
             #printlog('code:', code, 'in', bought_list)
             return False
@@ -212,10 +214,12 @@ def sell_all():
 
 def run():
     try:
-        symbol_list = ['A000270']
+        global buy_amount
+        global bought_list
+        symbol_list = ['A139250', 'A305540']
         bought_list = []     # 매수 완료된 종목 리스트
-        target_buy_count = 1 # 매수할 종목 수
-        buy_percent = 1
+        target_buy_count = 2 # 매수할 종목 수
+        buy_percent = 0.5
         stocks = get_stock_balance('ALL')      # 보유한 모든 종목 조회
         total_cash = int(get_current_cash())   # 100% 증거금 주문 가능 금액 조회
         buy_amount = total_cash * buy_percent  # 종목별 주문 금액 계산
