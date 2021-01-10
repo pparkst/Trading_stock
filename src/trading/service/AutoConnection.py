@@ -4,6 +4,7 @@ import os
 import sys
 sys.path.append(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__)))))
 import PersonalData as pD
+from util.common import printlog
 
 def AutoConnectionCreon():
     os.system('taskkill /IM coStarter* /F /T')
@@ -15,3 +16,5 @@ def AutoConnectionCreon():
     app = application.Application()
     app.start('C:\CREON\STARTER\coStarter.exe%s/autostart' % pD.accountInfo)
     time.sleep(90)
+    printlog(" Trying AutoConnection... ")
+    

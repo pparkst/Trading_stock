@@ -31,20 +31,27 @@ def check_creon_system():
     return True
 
 def run():
+    print("run")
     t_now = datetime.now()
-    t_8 = t_now.replace(hour=8, minute=30, second=0, microsecond=0)
+    t_8 = t_now.replace(hour=8, minute=0, second=0, microsecond=0)
+    t_830 = t_now.replace(hour=8, minute=30, second=0, microsecond=0)
     t_start = t_now.replace(hour=9, minute=0, second=0, microsecond=0)
     t_sell = t_now.replace(hour=15, minute=20, second=0, microsecond=0)
     today = datetime.today().weekday()
 
-    timerlimit = 60
-    if today in (5,6):
-        timerlimit = 28800
+    runTimer = threading.Timer(60, run)
+    holdTimer = threading.Timer(60, run)
 
-    timer = threading.Timer(timerlimit, run)
+    if today != 5 and today !=6 and t_8 < t_now < t_830:
+        printlog(" Trading App Running Is Successfully ")
 
-    if today != 5 and today !=6 and t_8 < t_now and crObj.cpStatus.IsConnect == 0:
+    if today != 5 and today !=6 and t_830 < t_now and crObj.cpStatus.IsConnect == 0:
         autoConnection.AutoConnectionCreon()
+
+        if crObj.cpStatus.IsConnect == 1:
+            printlog(" AutoConnection is Successfully ")
+
+        run()
 
     if today != 5 and today !=6 and t_start < t_now < t_sell:
         printlog(" Trading Creon App Run !")
@@ -53,10 +60,12 @@ def run():
         
         if creonStatus:
             Trading.run()
+            holdTimer.start()
         else:
-            run()    
+            run() 
     else:
-        timer.start()
+        print('runTimer Start')
+        runTimer.start()
 
     
     #월 : 0
