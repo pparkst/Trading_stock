@@ -3,7 +3,6 @@ import win32com.client
 import pandas as pd
 from datetime import datetime
 import time, calendar
-#sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
 import trading.trading_object as tradingObj
 from util.common import printlog
@@ -176,7 +175,7 @@ def buy_etf(code):
                 postMessage("`buy_etf("+ str(stock_name) + ' : ' + str(code) + 
                     ") -> " + str(bought_qty) + "EA bought!" + "`")
     except Exception as ex:
-        postMessage("`buy_etf("+ str(code) + ") -> exception! " + str(ex) + "`")
+        printlog("`buy_etf("+ str(code) + ") -> exception! " + str(ex) + "`")
 
 def sell_all():
     """보유한 모든 종목을 최유리 지정가 IOC 조건으로 매도한다."""
@@ -216,11 +215,11 @@ def run():
     try:
         global buy_amount
         global bought_list
-        symbol_list = ['A139250', 'A305540']
+        symbol_list = ['A305540', 'A139250']
         bought_list = []     # 매수 완료된 종목 리스트
         target_buy_count = 2 # 매수할 종목 수
         buy_percent = 0.5
-        stocks = get_stock_balance('ALL')      # 보유한 모든 종목 조회
+        #stocks = get_stock_balance('ALL')      # 보유한 모든 종목 조회
         total_cash = int(get_current_cash())   # 100% 증거금 주문 가능 금액 조회
         buy_amount = total_cash * buy_percent  # 종목별 주문 금액 계산
         printlog('100% 증거금 주문 가능 금액 :', total_cash)
@@ -247,12 +246,16 @@ def run():
                     if len(bought_list) < target_buy_count:
                         buy_etf(sym)
                         time.sleep(1)
-                if t_now.minute == 30 and 0 <= t_now.second <= 5: 
+                if t_now.hour in (9,11,13,15) and t_now.minute == 10 and 0 <= t_now.second <= 5: 
                     get_stock_balance('ALL')
                     time.sleep(5)
             if t_sell < t_now < t_exit:  # PM 03:15 ~ PM 03:20 : 일괄 매도
                 if sell_all() == True:
                     postMessage('`sell_all() returned True -> self-sleep!`')
+
+                    after_cash = int(get_current_cash())
+                    postMessage('` 금일 손익 : ￦ %s 입니다.`' % (format(after_cash - total_cash, ',')))
+                    postMessage('` 현 증거금 : ￦ %s 입니다.`' % (format(after_cash, ',')))
                     break
             if t_exit < t_now:  # PM 03:20 ~ :프로그램 종료
                 postMessage('`self-sleep!`')

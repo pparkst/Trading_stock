@@ -31,7 +31,6 @@ def check_creon_system():
     return True
 
 def run():
-    print("run")
     t_now = datetime.now()
     t_8 = t_now.replace(hour=8, minute=0, second=0, microsecond=0)
     t_830 = t_now.replace(hour=8, minute=30, second=0, microsecond=0)
@@ -64,10 +63,8 @@ def run():
         else:
             run() 
     else:
-        print('runTimer Start')
         runTimer.start()
-
-    
+        
     #월 : 0
     #화 : 1
     #수 : 2
