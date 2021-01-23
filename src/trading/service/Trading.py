@@ -226,7 +226,7 @@ def run():
         printlog('종목별 주문 비율 :', buy_percent)
         printlog('종목별 주문 금액 :', buy_amount)
         printlog('시작 시간 :', datetime.now().strftime('%m/%d %H:%M:%S'))
-        soldout = False;
+        soldout = False
 
         while True:
             t_now = datetime.now()
@@ -252,13 +252,12 @@ def run():
             if t_sell < t_now < t_exit:  # PM 03:15 ~ PM 03:20 : 일괄 매도
                 if sell_all() == True:
                     postMessage('`sell_all() returned True -> self-sleep!`')
-
-                    after_cash = int(get_current_cash())
-                    postMessage('` 금일 손익 : ￦ %s 입니다.`' % (format(after_cash - total_cash, ',')))
-                    postMessage('` 현 증거금 : ￦ %s 입니다.`' % (format(after_cash, ',')))
                     break
             if t_exit < t_now:  # PM 03:20 ~ :프로그램 종료
                 postMessage('`self-sleep!`')
+                after_cash = int(get_current_cash())
+                postMessage('` 금일 손익 : ￦ %s 입니다.`' % (format(after_cash - total_cash, ',')))
+                postMessage('` 현 증거금 : ￦ %s 입니다.`' % (format(after_cash, ',')))
                 break
             time.sleep(3)
 
