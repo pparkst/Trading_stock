@@ -215,10 +215,10 @@ def run():
     try:
         global buy_amount
         global bought_list
-        symbol_list = ['A305540', 'A139250']
+        symbol_list = ['A305540']
         bought_list = []     # 매수 완료된 종목 리스트
-        target_buy_count = 2 # 매수할 종목 수
-        buy_percent = 0.5
+        target_buy_count = 1 # 매수할 종목 수
+        buy_percent = 1
         #stocks = get_stock_balance('ALL')      # 보유한 모든 종목 조회
         total_cash = int(get_current_cash())   # 100% 증거금 주문 가능 금액 조회
         buy_amount = total_cash * buy_percent  # 종목별 주문 금액 계산
@@ -263,3 +263,4 @@ def run():
 
     except Exception as ex:
         postMessage('`main -> exception! ' + str(ex) + '`')
+        time.sleep(20)
