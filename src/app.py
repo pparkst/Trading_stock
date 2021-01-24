@@ -43,6 +43,7 @@ def run():
 
     if today != 5 and today !=6 and t_8 < t_now < t_830:
         printlog(" Trading App Running Is Successfully ")
+        run()
 
     if today != 5 and today !=6 and t_830 < t_now and crObj.cpStatus.IsConnect == 0:
         autoConnection.AutoConnectionCreon()
